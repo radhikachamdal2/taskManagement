@@ -24,12 +24,8 @@ const getAllTasks = async (): Promise<Task[]> => {
 
 const TaskList = () => {
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
-  const [open, setOpen] = useState(false);
   const [openAddDialog, setOpenAddDialog] = useState(false);
   const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
-
-  const closeAddDialog = () => setOpenAddDialog(false);
-  const closeUpdateDialog = () => setOpenUpdateDialog(false);
 
   const headers = ["", "Task", "Description", "Status"];
 
@@ -57,7 +53,7 @@ const TaskList = () => {
 
   const formFields: FormField[] = [
     {
-      title: "Task",
+      title: "Title",
       description: [""],
       type: "text",
     },
@@ -77,15 +73,6 @@ const TaskList = () => {
     setSelectedTask(task);
   };
 
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  const openDialog = () => {
-    setOpen(true);
-  };
-
-  console.log(open, "open");
   return (
     <>
       <div
@@ -103,6 +90,7 @@ const TaskList = () => {
         >
           Add new task
         </Button>
+
         <Dialog
           title="Add New Task"
           open={openAddDialog}

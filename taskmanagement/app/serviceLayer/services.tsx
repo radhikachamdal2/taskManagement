@@ -1,3 +1,4 @@
+import { tasks } from "../api/mockData";
 interface Task {
   id: number;
   title: string;
@@ -44,6 +45,14 @@ export const updateTasks = async (
     throw new Error("Error adding a new task");
   }
 
-  const updatedValue = await response.json();
+  const updatedValue: Task = await response.json();
+
+  updatedValue.forEach((newTask: Task) => {
+    const taskIndex = tasks.findIndex((task) => task.id === newTask.id);
+    if (taskIndex !== -1) {
+      tasks[taskIndex] = newTask;
+    }
+  });
+
   return updatedValue;
 };
