@@ -17,7 +17,6 @@ export async function GET() {
 export async function POST(request: Request) {
     const newTask : Task = await request.json()
     newTask.id = tasks.length + 1 
-    debugger
     tasks.push(newTask)
 
     return NextResponse.json(tasks, {status: 200})

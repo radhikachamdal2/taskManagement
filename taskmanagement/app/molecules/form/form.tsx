@@ -22,6 +22,7 @@ interface FormProps {
     status: string;
   };
   submitText: string;
+  handleClose: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
 }
 
 const Form: React.FC<FormProps> = ({
@@ -29,6 +30,7 @@ const Form: React.FC<FormProps> = ({
   taskLength,
   taskToUpdate,
   submitText,
+  handleClose,
 }) => {
   const { formData, handleChange } = taskFunctions(taskToUpdate);
 
@@ -109,6 +111,7 @@ const Form: React.FC<FormProps> = ({
               variant={"contained"}
               type="submit"
               color="primary"
+              onClick={handleClose}
             >
               {submitText}
             </Button>

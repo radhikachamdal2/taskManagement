@@ -12,19 +12,20 @@ interface DialogProps {
   title: string;
   children: any;
   actionText: string;
+  handleClose: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+  open: boolean;
+  openDialog: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
 }
 
-const Dialog: React.FC<DialogProps> = ({ title, children, actionText }) => {
-  const [open, setOpen] = useState(false);
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  const openDialog = () => {
-    setOpen(true);
-  };
-
+const Dialog: React.FC<DialogProps> = ({
+  title,
+  children,
+  actionText,
+  openDialog,
+  open,
+  handleClose,
+}) => {
+  console.log(open, "open");
   return (
     <>
       <Button

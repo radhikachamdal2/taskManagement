@@ -32,7 +32,6 @@ export const updateTasks = async (
   id,
   updatedField: Partial<Task>
 ): Promise<Task> => {
-  debugger;
   const response = await fetch(`/api/tasks/${id.id}`, {
     method: "PATCH",
     headers: {
@@ -45,7 +44,6 @@ export const updateTasks = async (
     throw new Error("Error adding a new task");
   }
 
-  debugger;
   const updatedValue = await response.json();
   return updatedValue;
 };
