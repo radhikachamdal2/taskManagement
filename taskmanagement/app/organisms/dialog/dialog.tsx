@@ -4,15 +4,18 @@ import {
   DialogTitle,
   Button,
   DialogContent,
+  IconButton,
 } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
 
 interface DialogProps {
   title: string;
   children: any;
+  actionText: string;
 }
 
-const Dialog: React.FC<DialogProps> = ({ title, children }) => {
-  const [open, setOpen] = useState(true);
+const Dialog: React.FC<DialogProps> = ({ title, children, actionText }) => {
+  const [open, setOpen] = useState(false);
 
   const handleClose = () => {
     setOpen(false);
@@ -24,8 +27,24 @@ const Dialog: React.FC<DialogProps> = ({ title, children }) => {
 
   return (
     <>
-      <Button onClick={openDialog}> Add a new task </Button>
+      <Button
+        sx={{ backgroundColor: "black" }}
+        variant="contained"
+        onClick={openDialog}
+      >
+        {actionText}
+      </Button>
       <ReusableDialog open={open} onClose={handleClose}>
+        <div style={{ display: "flex", justifyContent: "end" }}>
+          <IconButton
+            onClick={handleClose}
+            size="small"
+            aria-label="Close Dialog"
+          >
+            <CloseIcon />
+          </IconButton>
+        </div>
+
         <DialogTitle>{title}</DialogTitle>
         <DialogContent>{children} </DialogContent>
       </ReusableDialog>

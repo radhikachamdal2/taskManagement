@@ -7,9 +7,12 @@ import {
   Select,
 } from "@mui/material";
 import React, { useState, useEffect } from "react";
+import { addTasks, getTasks, updateTasks } from "@/app/serviceLayer/services";
 import { useForm, Controller } from "react-hook-form";
+import { taskFunctions } from "./formState";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import "./form.styles.css";
+import FormField from "./fieldData";
 
 interface FormField {
   title: string;
@@ -18,18 +21,20 @@ interface FormField {
 }
 
 interface FormProps {
-  data: FormField[];
+  data: any[];
   taskLength: number | 0;
+  taskToUpdate?: {
+    id: number;
+    title: string;
+    description: string;
+    status: string;
+  };
 }
 
-const Form: React.FC<FormProps> = ({ data, taskLength }) => {
-  const [formData, setFormData] = useState({
-    tasks: "",
-    description: "",
-    status: "",
-  });
+const Form: React.FC<FormProps> = ({ data, taskLength, taskToUpdate }) => {
+  const { formData, handleChange } = taskFunctions(taskToUpdate);
+  console.log(formData, "insidd form");
 
-  console.log(formData, "formData", taskLength, "taskLength");
   const {
     handleSubmit,
     control,
@@ -38,52 +43,32 @@ const Form: React.FC<FormProps> = ({ data, taskLength }) => {
 
   const queryClient = useQueryClient();
 
-  const handleChange = (
-    event: React.ChangeEvent<HTMLInputElement>,
-    field: FormField
-  ) => {
-    const { name, value } = event.target;
-    setFormData((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
-  };
-
   const mutation = useMutation({
-    mutationFn: async (newTask: any) => {
-      const response = await fetch("/api/tasks", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(newTask),
-      });
-
-      return response.json();
-    },
-
+    mutationFn: addTasks,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
     },
   });
 
+  //   const mutation = useMutation({
+  //     mutationFn: updateTasks,
+  //     onSuccess: () => {
+  //       queryClient.invalidateQueries({ queryKey: ["tasks"] });
+  //     },
+  //   });
+
   const { data: tasks, isLoading } = useQuery({
     queryKey: ["tasks"],
-    queryFn: async () => {
-      const response = await fetch("/api/tasks");
-      if (!response.ok) {
-        console.log("error in this ");
-      }
-      return response.json();
-    },
+    queryFn: getTasks,
     enabled: false,
   });
 
   const formSubmit = async (data: any) => {
     const newTask = {
       id: taskLength + 1,
-      ...formData,
+      ...data,
     };
+    console.log(newTask, data, "new tasks this one");
     mutation.mutate(newTask);
   };
 
@@ -96,58 +81,24 @@ const Form: React.FC<FormProps> = ({ data, taskLength }) => {
   return (
     <form onSubmit={handleSubmit(formSubmit)}>
       <div style={{ alignItems: "center", width: "100%", padding: "12px" }}>
-        {data?.map((field, index) => (
-          <div key={index}>
-            {field.type === "text" || field.type === "textarea" ? (
-              <Controller
-                name={field.title.toLowerCase()}
-                control={control}
-                defaultValue=""
-                render={({ field: controllerField }) => (
-                  <TextField
-                    {...controllerField}
-                    name={field.title.toLowerCase()}
-                    id={field.title}
-                    variant={"outlined"}
-                    label={field.title}
-                    sx={{ width: "80%", padding: "10px" }}
-                    onChange={(event) => {
-                      controllerField.onChange(event);
-                      handleChange(event, field);
-                    }}
-                  />
-                )}
-              />
-            ) : field.type === "select" ? (
-              <FormControl sx={{ width: "80%" }}>
-                <Controller
-                  name={field.title}
-                  control={control}
-                  defaultValue=""
-                  render={({ field: controllerField }) => (
-                    <div style={{ padding: "10px" }}>
-                      <TextField
-                        // id="standard-select-currency-native"
-                        select
-                        label={field.title}
-                        defaultValue=""
-                        helperText="Select a status"
-                        variant="standard"
-                        fullWidth
-                      >
-                        {field.description.map((item: string) => (
-                          <option>{item}</option>
-                        ))}
-                      </TextField>
-                    </div>
-                  )}
-                />
-              </FormControl>
-            ) : null}
-          </div>
+        {data.map((field, index) => (
+          <FormField
+            key={index}
+            field={field}
+            control={control}
+            handleChange={handleChange}
+          />
         ))}
-        <div style={{ width: "100%", display: "flex", justifyContent: "end" }}>
-          <Button variant={"contained"} type="submit">
+        <div
+          style={{
+            width: "100%",
+            display: "flex",
+            justifyContent: "end",
+            gap: "20px",
+          }}
+        >
+          {/* <Button variant="contained">Cancel</Button> */}
+          <Button variant={"contained"} type="submit" color="primary">
             Add Task!
           </Button>
         </div>

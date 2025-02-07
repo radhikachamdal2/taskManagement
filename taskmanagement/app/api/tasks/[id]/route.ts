@@ -11,15 +11,26 @@ const tasks : Task[] = [{
 }]
 
 export async function PATCH(request: Request, { params }: { params : { id: string }}){
+    console.log(params, 'paramsss')
     const taskId = parseInt(params.id); // id comes in as a string 
-    const updatedData = await request.json();
+
+    const {id, ...updatedData} = await request.json();
+
 
     const task = tasks.find(task => task.id === taskId);
 
     if(!task){
         return NextResponse.json({message: 'Task not found'})
-    } else {
-        Object.assign(task, updatedData)
-        return NextResponse.json(task)
-    }
+    } 
+
+  tasks[taskId] = {
+    ...tasks[taskId],
+    ...updatedData,
+  };
+  debugger
+
+  return NextResponse.json(tasks[taskId], {status:200})
+        // Object.assign(task, updatedData)
+        // return NextResponse.json(task)
+    
 } 

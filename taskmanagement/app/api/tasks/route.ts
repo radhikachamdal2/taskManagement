@@ -10,7 +10,6 @@ interface Task {
 
 //Get all the tasks 
 export async function GET() {
-    debugger
     return NextResponse.json(tasks)
 }
 
@@ -19,6 +18,5 @@ export async function POST(request: Request) {
     const newTask : Task = await request.json()
     newTask.id = tasks.length + 1 
     tasks.push(newTask)
-    debugger
     return NextResponse.json(tasks, {status: 200})
 }

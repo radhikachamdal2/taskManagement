@@ -23,6 +23,8 @@ const getAllTasks = async (): Promise<Task[]> => {
 };
 
 const TaskList = () => {
+  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+
   const headers = ["ID", "Task", "Description", "Status"];
 
   const {
@@ -43,32 +45,60 @@ const TaskList = () => {
 
   const formFields: FormField[] = [
     {
-      title: "Tasks",
+      title: "title",
       description: "",
       type: "text",
     },
     {
-      title: "Description",
+      title: "description",
       description: "",
       type: "textarea",
     },
     {
-      title: "Status",
+      title: "status",
       description: ["In Progress", "Complete", "Not Started"],
       type: "select",
     },
   ];
 
+  const handleCheckboxChange = (task: Task) => {
+    setSelectedTask(task); // Set the selected task to be passed into the form
+  };
+
   return (
     <>
-      <Dialog title="Add a new Task">
-        <DialogContentText style={{ display: "flex", textAlign: "center" }}>
-          Enter in details to generate a new task, this will update
-          automatically on your list!{" "}
-        </DialogContentText>
-        <Form taskLength={tasks?.length || []} data={formFields} />
-      </Dialog>
-      <TaskTable tasks={tasks || []} taskHeaders={headers} />;
+      <div
+        style={{
+          width: "100%",
+          display: "flex",
+          justifyContent: "end",
+          gap: "30px",
+        }}
+      >
+        <Dialog actionText="Add New Tasks" title="Add a new Task">
+          <DialogContentText style={{ display: "flex", textAlign: "center" }}>
+            Enter in details to generate a new task, this will update
+            automatically on your list!{" "}
+          </DialogContentText>
+          <Form taskLength={tasks?.length || 0} data={formFields} />
+        </Dialog>
+        <Dialog actionText="Update Exising Tasks" title="Update a task">
+          <DialogContentText style={{ display: "flex", textAlign: "center" }}>
+            Update the task accordingly
+          </DialogContentText>
+          <Form
+            taskLength={tasks?.length || 0}
+            data={formFields}
+            taskToUpdate={selectedTask}
+          />
+        </Dialog>
+      </div>
+      <TaskTable
+        tasks={tasks || []}
+        taskHeaders={headers}
+        onCheckboxChange={handleCheckboxChange}
+      />
+      ;
     </>
   );
 };
