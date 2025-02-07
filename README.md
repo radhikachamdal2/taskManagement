@@ -1,4 +1,4 @@
-# taskManagement
+# Task Management Tool 
 
 What is built? 
 A task managment tool system, which fetches all the tasks. The tool is also built to enable users to add onto their tasks, as well as make updates. 
