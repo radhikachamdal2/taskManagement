@@ -8,7 +8,6 @@ interface Task {
 }
 
 export const taskFunctions = (taskToUpdate: Task) => {
-  console.log(taskToUpdate, "tasktoupdaye");
   const [formData, setFormData] = useState({
     title: taskToUpdate?.title || "",
     description: taskToUpdate?.description || "",
@@ -20,13 +19,13 @@ export const taskFunctions = (taskToUpdate: Task) => {
     field: {}
   ) => {
     const { name, value } = event.target;
-    console.log(value, "value", name, formData, field);
+
     setFormData((prevState) => ({
       ...prevState,
       [name]: value,
     }));
   };
-  console.log(formData, "formData", name);
+
   return {
     formData,
     handleChange,

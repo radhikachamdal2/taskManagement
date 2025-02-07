@@ -1,5 +1,5 @@
-import { Button } from "@mui/material";
-import React, { useEffect } from "react";
+import { Button, Snackbar, Alert } from "@mui/material";
+import React, { useEffect, useState } from "react";
 import { addTasks, getTasks, updateTasks } from "@/app/serviceLayer/services";
 import { useForm } from "react-hook-form";
 import { taskFunctions } from "./formState";
@@ -40,6 +40,8 @@ const Form: React.FC<FormProps> = ({
 
   const queryClient = useQueryClient();
 
+  const [showAlert, setShowAlert] = useState(false);
+
   const mutation = useMutation({
     mutationFn: taskToUpdate ? updateTasks : addTasks,
     onSuccess: () => {
@@ -61,7 +63,7 @@ const Form: React.FC<FormProps> = ({
 
     mutation.mutate(newTask);
   };
-  const formSubmit = async (data: { [key: string]: string }) => {
+  const formSubmit = (data: { [key: string]: string }) => {
     const newTask = {
       id: taskLength + 1,
       ...data,
@@ -72,39 +74,62 @@ const Form: React.FC<FormProps> = ({
   useEffect(() => {
     if (mutation.isSuccess) {
       queryClient.refetchQueries({ queryKey: ["tasks"] });
+      setShowAlert(true);
+    } else {
+      setShowAlert(false);
     }
   }, [mutation.isSuccess]);
 
+  const handleCloseAlert = () => {
+    setShowAlert(false);
+  };
+
   return (
-    <form onSubmit={handleSubmit(taskToUpdate ? onSubmit : formSubmit)}>
-      <div style={{ alignItems: "center", width: "100%" }}>
-        {data.map((field, index) => (
-          <FormField
-            key={index}
-            field={field}
-            control={control}
-            handleChange={handleChange}
-          />
-        ))}
-        <div
-          style={{
-            width: "100%",
-            display: "flex",
-            justifyContent: "end",
-            gap: "20px",
-          }}
-        >
-          <Button
-            sx={{ backgroundColor: "black", textTransform: "none" }}
-            variant={"contained"}
-            type="submit"
-            color="primary"
+    <>
+      <form onSubmit={handleSubmit(taskToUpdate ? onSubmit : formSubmit)}>
+        <div style={{ alignItems: "center", width: "100%" }}>
+          {data.map((field, index) => (
+            <FormField
+              key={index}
+              field={field}
+              control={control}
+              handleChange={handleChange}
+            />
+          ))}
+          <div
+            style={{
+              width: "100%",
+              display: "flex",
+              justifyContent: "end",
+              gap: "20px",
+            }}
           >
-            {submitText}
-          </Button>
+            <Button
+              sx={{ backgroundColor: "black", textTransform: "none" }}
+              variant={"contained"}
+              type="submit"
+              color="primary"
+            >
+              {submitText}
+            </Button>
+          </div>
         </div>
-      </div>
-    </form>
+      </form>
+
+      <Snackbar
+        open={showAlert}
+        autoHideDuration={3000}
+        onClose={handleCloseAlert}
+      >
+        <Alert
+          onClose={handleCloseAlert}
+          severity="success"
+          sx={{ width: "100%" }}
+        >
+          Task successfully {taskToUpdate ? "updated" : "added"}!
+        </Alert>
+      </Snackbar>
+    </>
   );
 };
 
