@@ -6,7 +6,7 @@ export default function Home() {
   return (
     <div className={styles.page}>
       <main className={styles.main}>
-        <NavigationBar />
+        <NavigationBar navigationHeader="Welcome back to task manager!" />
         <TaskList />
       </main>
       <footer className={styles.footer}></footer>

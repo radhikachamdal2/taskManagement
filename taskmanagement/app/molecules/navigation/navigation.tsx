@@ -12,9 +12,11 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
+interface NavigationProps {
+  navigationHeader: string;
+}
 
-function NavigationBar() {
+const NavigationBar: React.FC<NavigationProps> = ({ navigationHeader }) => {
   return (
     <AppBar sx={{ backgroundColor: "black" }} position="static">
       <Container maxWidth="xl">
@@ -28,7 +30,7 @@ function NavigationBar() {
               textDecoration: "none",
             }}
           >
-            Task Manager!
+            {navigationHeader}
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}></Box>
@@ -43,5 +45,6 @@ function NavigationBar() {
       </Container>
     </AppBar>
   );
-}
+};
+
 export default NavigationBar;

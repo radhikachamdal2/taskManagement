@@ -1,17 +1,9 @@
-import {
-  Button,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  TextField,
-  Select,
-} from "@mui/material";
-import React, { useState, useEffect } from "react";
+import { Button } from "@mui/material";
+import React, { useEffect } from "react";
 import { addTasks, getTasks, updateTasks } from "@/app/serviceLayer/services";
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { taskFunctions } from "./formState";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import "./form.styles.css";
 import FormField from "./fieldData";
 
 interface FormField {
