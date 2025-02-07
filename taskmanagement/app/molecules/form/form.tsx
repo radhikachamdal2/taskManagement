@@ -21,19 +21,24 @@ interface FormField {
 }
 
 interface FormProps {
-  data: any[];
-  taskLength: number | 0;
+  data: FormField[];
+  taskLength: number;
   taskToUpdate?: {
     id: number;
     title: string;
     description: string;
     status: string;
   };
+  submitText: string;
 }
 
-const Form: React.FC<FormProps> = ({ data, taskLength, taskToUpdate }) => {
+const Form: React.FC<FormProps> = ({
+  data,
+  taskLength,
+  taskToUpdate,
+  submitText,
+}) => {
   const { formData, handleChange } = taskFunctions(taskToUpdate);
-  console.log(formData, "insidd form");
 
   const {
     handleSubmit,
@@ -44,18 +49,11 @@ const Form: React.FC<FormProps> = ({ data, taskLength, taskToUpdate }) => {
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
-    mutationFn: addTasks,
+    mutationFn: taskToUpdate ? updateTasks : addTasks,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
     },
   });
-
-  //   const mutation = useMutation({
-  //     mutationFn: updateTasks,
-  //     onSuccess: () => {
-  //       queryClient.invalidateQueries({ queryKey: ["tasks"] });
-  //     },
-  //   });
 
   const { data: tasks, isLoading } = useQuery({
     queryKey: ["tasks"],
@@ -63,12 +61,19 @@ const Form: React.FC<FormProps> = ({ data, taskLength, taskToUpdate }) => {
     enabled: false,
   });
 
-  const formSubmit = async (data: any) => {
+  const onSubmit = (data: { [key: string]: string }) => {
+    const newTask = {
+      id: taskToUpdate ? taskToUpdate.id : taskLength + 1,
+      ...data,
+    };
+
+    mutation.mutate(newTask);
+  };
+  const formSubmit = async (data: { [key: string]: string }) => {
     const newTask = {
       id: taskLength + 1,
       ...data,
     };
-    console.log(newTask, data, "new tasks this one");
     mutation.mutate(newTask);
   };
 
@@ -79,8 +84,8 @@ const Form: React.FC<FormProps> = ({ data, taskLength, taskToUpdate }) => {
   }, [mutation.isSuccess]);
 
   return (
-    <form onSubmit={handleSubmit(formSubmit)}>
-      <div style={{ alignItems: "center", width: "100%", padding: "12px" }}>
+    <form onSubmit={handleSubmit(taskToUpdate ? onSubmit : formSubmit)}>
+      <div style={{ alignItems: "center", width: "100%" }}>
         {data.map((field, index) => (
           <FormField
             key={index}
@@ -97,9 +102,13 @@ const Form: React.FC<FormProps> = ({ data, taskLength, taskToUpdate }) => {
             gap: "20px",
           }}
         >
-          {/* <Button variant="contained">Cancel</Button> */}
-          <Button variant={"contained"} type="submit" color="primary">
-            Add Task!
+          <Button
+            sx={{ backgroundColor: "black", textTransform: "none" }}
+            variant={"contained"}
+            type="submit"
+            color="primary"
+          >
+            {submitText}
           </Button>
         </div>
       </div>

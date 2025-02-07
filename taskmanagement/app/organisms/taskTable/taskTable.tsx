@@ -30,19 +30,19 @@ const TaskTable: React.FC<TaskTableProps> = ({
   taskHeaders,
   onCheckboxChange,
 }) => {
-  const [checked, setChecked] = useState(false);
+  const [selectedTaskId, setSelectedTaskId] = useState<number | null>(null);
 
   const handleCheckbox = (
     event: React.ChangeEvent<HTMLInputElement>,
-    id: number
+    task: Task
   ) => {
-    const checkedVal = event.target.checked;
+    const isChecked = event.target.checked;
 
-    if (checkedVal) {
-      setChecked((prevState) => ({
-        ...prevState,
-        [id]: true,
-      }));
+    if (isChecked) {
+      setSelectedTaskId(task.id);
+      onCheckboxChange(task);
+    } else {
+      setSelectedTaskId(null);
     }
   };
 
@@ -72,12 +72,8 @@ const TaskTable: React.FC<TaskTableProps> = ({
             <TableRow key={item.id}>
               <TableCell>
                 <Checkbox
-                  id={item.id}
-                  checked={checked[item.id]}
-                  onChange={(event) => {
-                    handleCheckbox(event, item.id);
-                    onCheckboxChange(item);
-                  }}
+                  checked={selectedTaskId === item.id}
+                  onChange={(event) => handleCheckbox(event, item)}
                 />
               </TableCell>
               <TableCell>{item.title}</TableCell>

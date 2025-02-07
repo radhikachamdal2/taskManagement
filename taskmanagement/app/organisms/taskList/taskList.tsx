@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import TaskTable from "../taskTable/taskTable";
 import { useQuery } from "@tanstack/react-query";
-import Dialog from "../dialog/dialog";
+import Dialog from "../../molecules/dialog/dialog";
 import Form from "@/app/molecules/form/form";
 import { DialogContentText } from "@mui/material";
 
@@ -25,7 +25,7 @@ const getAllTasks = async (): Promise<Task[]> => {
 const TaskList = () => {
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
 
-  const headers = ["ID", "Task", "Description", "Status"];
+  const headers = ["", "Task", "Description", "Status"];
 
   const {
     data: tasks,
@@ -43,26 +43,32 @@ const TaskList = () => {
     return <p>Errors present... </p>;
   }
 
+  interface FormField {
+    title: string;
+    description: [""];
+    type: "text" | "textarea" | "select";
+  }
+
   const formFields: FormField[] = [
     {
-      title: "title",
-      description: "",
+      title: "Task",
+      description: [""],
       type: "text",
     },
     {
-      title: "description",
-      description: "",
+      title: "Description",
+      description: [""],
       type: "textarea",
     },
     {
-      title: "status",
+      title: "Status",
       description: ["In Progress", "Complete", "Not Started"],
       type: "select",
     },
   ];
 
   const handleCheckboxChange = (task: Task) => {
-    setSelectedTask(task); // Set the selected task to be passed into the form
+    setSelectedTask(task);
   };
 
   return (
@@ -75,21 +81,26 @@ const TaskList = () => {
           gap: "30px",
         }}
       >
-        <Dialog actionText="Add New Tasks" title="Add a new Task">
+        <Dialog actionText="Add New Tasks" title="Add New Task">
           <DialogContentText style={{ display: "flex", textAlign: "center" }}>
             Enter in details to generate a new task, this will update
             automatically on your list!{" "}
           </DialogContentText>
-          <Form taskLength={tasks?.length || 0} data={formFields} />
+          <Form
+            taskLength={tasks?.length || 0}
+            data={formFields}
+            submitText="Add New Task"
+          />
         </Dialog>
         <Dialog actionText="Update Exising Tasks" title="Update a task">
           <DialogContentText style={{ display: "flex", textAlign: "center" }}>
-            Update the task accordingly
+            Fill the fields for the task which needs updating.
           </DialogContentText>
           <Form
             taskLength={tasks?.length || 0}
             data={formFields}
             taskToUpdate={selectedTask}
+            submitText={"Update Task"}
           />
         </Dialog>
       </div>

@@ -28,7 +28,7 @@ const Dialog: React.FC<DialogProps> = ({ title, children, actionText }) => {
   return (
     <>
       <Button
-        sx={{ backgroundColor: "black" }}
+        sx={{ backgroundColor: "black", textTransform: "none" }}
         variant="contained"
         onClick={openDialog}
       >

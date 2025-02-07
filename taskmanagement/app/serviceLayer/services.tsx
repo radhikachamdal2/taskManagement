@@ -1,3 +1,10 @@
+interface Task {
+  id: number;
+  title: string;
+  description: string;
+  status: string;
+}
+
 export const getTasks = async () => {
   const response = await fetch("/api/tasks");
   if (!response.ok) {
@@ -24,23 +31,24 @@ export const addTasks = async (newTask: any) => {
 };
 
 export const updateTasks = async (
-  id: number,
+  id,
   updatedField: Partial<Task>
 ): Promise<Task> => {
-  console.log(id, "idddd");
-  const response = await fetch(`/api/tasks/${id}`, {
+  console.log(id, "idddd", updatedField);
+  debugger;
+  const response = await fetch(`/api/tasks/${id.id}`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(updatedField),
+    body: JSON.stringify(id),
   });
 
   if (!response.ok) {
     throw new Error("Error adding a new task");
-    debugger;
   }
 
+  debugger;
   const updatedValue = await response.json();
   return updatedValue;
 };
