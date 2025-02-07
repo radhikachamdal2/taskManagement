@@ -4,7 +4,7 @@ import TaskTable from "../taskTable/taskTable";
 import { useQuery } from "@tanstack/react-query";
 import Dialog from "../../molecules/dialog/dialog";
 import Form from "@/app/molecules/form/form";
-import { DialogContentText } from "@mui/material";
+import { DialogContentText, Button } from "@mui/material";
 
 interface Task {
   id: number;
@@ -25,6 +25,11 @@ const getAllTasks = async (): Promise<Task[]> => {
 const TaskList = () => {
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [open, setOpen] = useState(false);
+  const [openAddDialog, setOpenAddDialog] = useState(false);
+  const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
+
+  const closeAddDialog = () => setOpenAddDialog(false);
+  const closeUpdateDialog = () => setOpenUpdateDialog(false);
 
   const headers = ["", "Task", "Description", "Status"];
 
@@ -91,12 +96,17 @@ const TaskList = () => {
           gap: "30px",
         }}
       >
+        <Button
+          sx={{ backgroundColor: "black", textTransform: "none" }}
+          variant="contained"
+          onClick={() => setOpenAddDialog(true)}
+        >
+          Add new task
+        </Button>
         <Dialog
-          actionText="Add New Tasks"
           title="Add New Task"
-          openDialog={openDialog}
-          open={open}
-          handleClose={handleClose}
+          open={openAddDialog}
+          handleClose={() => setOpenAddDialog(false)}
         >
           <DialogContentText style={{ display: "flex", textAlign: "center" }}>
             Enter in details to generate a new task, this will update
@@ -106,15 +116,22 @@ const TaskList = () => {
             taskLength={tasks?.length || 0}
             data={formFields}
             submitText="Add New Task"
-            handleClose={handleClose}
+            handleClose={() => setOpenAddDialog(false)}
           />
         </Dialog>
+
+        <Button
+          sx={{ backgroundColor: "black", textTransform: "none" }}
+          variant="contained"
+          onClick={() => setOpenUpdateDialog(true)}
+        >
+          Update Tasks
+        </Button>
+
         <Dialog
-          actionText="Update Exising Tasks"
           title="Update a task"
-          openDialog={openDialog}
-          open={open}
-          handleClose={handleClose}
+          open={openUpdateDialog}
+          handleClose={() => setOpenUpdateDialog(false)}
         >
           <DialogContentText style={{ display: "flex", textAlign: "center" }}>
             Fill the fields for the task which needs updating.
@@ -124,7 +141,7 @@ const TaskList = () => {
             data={formFields}
             taskToUpdate={selectedTask}
             submitText={"Update Task"}
-            handleClose={handleClose}
+            handleClose={() => setOpenUpdateDialog(false)}
           />
         </Dialog>
       </div>

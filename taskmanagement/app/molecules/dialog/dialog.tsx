@@ -21,20 +21,11 @@ const Dialog: React.FC<DialogProps> = ({
   title,
   children,
   actionText,
-  openDialog,
   open,
   handleClose,
 }) => {
-  console.log(open, "open");
   return (
     <>
-      <Button
-        sx={{ backgroundColor: "black", textTransform: "none" }}
-        variant="contained"
-        onClick={openDialog}
-      >
-        {actionText}
-      </Button>
       <ReusableDialog open={open} onClose={handleClose}>
         <div style={{ display: "flex", justifyContent: "end" }}>
           <IconButton
