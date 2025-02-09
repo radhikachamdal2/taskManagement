@@ -39,7 +39,6 @@ const TaskTable: React.FC<TaskTableProps> = ({
       if (isChecked) {
         setSelectedTaskId(task.id);
         onCheckboxChange(task);
-        console.log(task.id, "task", task);
       } else {
         setSelectedTaskId(null);
       }

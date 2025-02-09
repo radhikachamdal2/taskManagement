@@ -11,16 +11,13 @@ import CloseIcon from "@mui/icons-material/Close";
 interface DialogProps {
   title: string;
   children: any;
-  actionText: string;
   handleClose: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
   open: boolean;
-  openDialog: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
 }
 
 const Dialog: React.FC<DialogProps> = ({
   title,
   children,
-  actionText,
   open,
   handleClose,
 }) => {
