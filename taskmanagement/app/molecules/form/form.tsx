@@ -22,7 +22,9 @@ interface FormProps {
     status: string;
   };
   submitText: string;
-  handleClose: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+  handleClose?: (
+    event?: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => void;
 }
 
 const Form: React.FC<FormProps> = ({
@@ -112,6 +114,14 @@ const Form: React.FC<FormProps> = ({
               type="submit"
               color="primary"
               onClick={handleClose}
+            >
+              Close
+            </Button>
+            <Button
+              sx={{ backgroundColor: "black", textTransform: "none" }}
+              variant={"contained"}
+              type="submit"
+              color="primary"
             >
               {submitText}
             </Button>

@@ -10,7 +10,7 @@ import {
   TableBody,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 
 interface Task {
   id: number;
@@ -32,19 +32,21 @@ const TaskTable: React.FC<TaskTableProps> = ({
 }) => {
   const [selectedTaskId, setSelectedTaskId] = useState<number | null>(null);
 
-  const handleCheckbox = (
-    event: React.ChangeEvent<HTMLInputElement>,
-    task: Task
-  ) => {
-    const isChecked = event.target.checked;
+  const checkboxHandler = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>, task: Task) => {
+      const isChecked = event.target.checked;
 
-    if (isChecked) {
-      setSelectedTaskId(task.id);
-      onCheckboxChange(task);
-    } else {
-      setSelectedTaskId(null);
-    }
-  };
+      if (isChecked) {
+        setSelectedTaskId(task.id);
+        onCheckboxChange(task);
+        console.log(task.id, "task", task);
+      } else {
+        setSelectedTaskId(null);
+      }
+    },
+
+    [selectedTaskId]
+  );
 
   const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -73,7 +75,7 @@ const TaskTable: React.FC<TaskTableProps> = ({
               <TableCell>
                 <Checkbox
                   checked={selectedTaskId === item.id}
-                  onChange={(event) => handleCheckbox(event, item)}
+                  onChange={(event) => checkboxHandler(event, item)}
                 />
               </TableCell>
               <TableCell>{item.title}</TableCell>

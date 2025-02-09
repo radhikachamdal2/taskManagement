@@ -29,30 +29,26 @@ export const addTasks = async (newTask: any) => {
   return response.json();
 };
 
-export const updateTasks = async (
-  id,
-  updatedField: Partial<Task>
-): Promise<Task> => {
-  const response = await fetch(`/api/tasks/${id.id}`, {
+export const updateTasks = async (task: Partial<Task>): Promise<Task> => {
+  const response = await fetch(`/api/tasks/${task.id}`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(id),
+    body: JSON.stringify(task),
   });
 
   if (!response.ok) {
-    throw new Error("Error adding a new task");
+    throw new Error("Error updating a new task");
   }
 
   const updatedValue: Task = await response.json();
 
-  updatedValue.forEach((newTask: Task) => {
-    const taskIndex = tasks.findIndex((task) => task.id === newTask.id);
-    if (taskIndex !== -1) {
-      tasks[taskIndex] = newTask;
-    }
-  });
-
+  const taskIndex = tasks.findIndex(
+    (eachTask) => eachTask.id === updatedValue.id
+  );
+  if (taskIndex !== -1) {
+    tasks[taskIndex] = updatedValue;
+  }
   return updatedValue;
 };
