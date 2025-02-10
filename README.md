@@ -8,7 +8,7 @@ Follow the steps in order to get the code running!
 
 1. Clone the repo, to a place where you'd like to store
 2. Run in VS code or editor of choice
-3. Use the cd command within the terminal and type "cd taskManagement"
+3. Use the cd command within the terminal and type "cd taskmanagement"
 4. Run the command "npm install"
 5. From then all the dependencies should be installed
 6. Finally run "npm run dev"
